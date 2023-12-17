@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.IO Client</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
+</head>
+<body>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Connect to Socket.IO server
+            const socket = io('http://localhost:3000/blockchain');
+
+            // Handle connection event
+            socket.on('connect', () => {
+                console.log('Connected to Socket.IO server');
+
+                // Example: Send a simple message
+                setInterval(() => {
+                    socket.emit('message', { message: 'Hello, server!' });
+                }, 10000)
+
+                // Example: Send a message with acknowledgment
+                socket.emit('message-with-ack', { message: 'Hello, server with acknowledgment!' }, (ackData) => {
+                    console.log('Acknowledgment received:', ackData);
+                });
+            });
+
+            // Handle disconnection event
+            socket.on('disconnect', () => {
+                console.log('Disconnected from Socket.IO server');
+            });
+
+            // Handle custom event 'message-back'
+            socket.on('message-back', (data) => {
+                console.log('Received message-back event:', data);
+            });
+        });
+    </script>
+
+    <h1>Socket.IO</h1>
+</body>
+</html>
